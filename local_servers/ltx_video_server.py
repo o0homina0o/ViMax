@@ -103,16 +103,29 @@ def _pipeline_class(mode: int):
     return cls
 
 
+def _hard_vram_release():
+    """Drop every cached pipeline and free CUDA memory (used after failures)."""
+    global _pipelines
+    import gc as _gc
+    _pipelines.clear()
+    _gc.collect()
+    torch.cuda.empty_cache()
+    logging.info("hard VRAM release done")
+
+
 def _load(mode: int):
     if mode in _pipelines:
         return _pipelines[mode]
+    import gc as _gc
     if not _KEEP_ALL and _pipelines:
         for other in list(_pipelines):
             if other != mode:
                 logging.info("Unloading pipeline mode %d to free VRAM for mode %d", other, mode)
                 del _pipelines[other]
-        gc.collect()
+        _gc.collect()
         torch.cuda.empty_cache()
+    _gc.collect()
+    torch.cuda.empty_cache()
     logging.info("Loading %s (mode %d) on %s ...", _REPO, mode, _DEVICE)
     cls = _pipeline_class(mode)
     pipe = cls.from_pretrained(_REPO, torch_dtype=_DTYPE)
@@ -176,6 +189,7 @@ def generate(req: GenerateRequest):
         return _generate(req)
     except Exception as exc:
         logging.exception("generation failed")
+        _hard_vram_release()
         return JSONResponse(status_code=500, content={"ok": False, "error": str(exc)})
 
 
