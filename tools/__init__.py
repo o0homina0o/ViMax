@@ -8,6 +8,10 @@ from .image_generator_nanobanana_google_api import ImageGeneratorNanobananaGoogl
 from .image_generator_nanobanana_yunwu_api import ImageGeneratorNanobananaYunwuAPI
 from .image_generator_openrouter_api import ImageGeneratorOpenRouterAPI
 
+# local generators (self-hosted GPU servers)
+from .local_image_generator import ImageGeneratorQwenLocal
+from .local_video_generator import VideoGeneratorLTXLocal
+
 # reranker for rag
 from .reranker_bge_silicon_api import RerankerBgeSiliconapi
 
@@ -27,6 +31,8 @@ __all__ = [
     "ImageGeneratorNanobananaGoogleAPI",
     "ImageGeneratorNanobananaYunwuAPI",
     "ImageGeneratorOpenRouterAPI",
+    "ImageGeneratorQwenLocal",
+    "VideoGeneratorLTXLocal",
     "RerankerBgeSiliconapi",
     "VideoGeneratorDoubaoSeedanceYunwuAPI",
     "VideoGeneratorOmniYunwuAPI",

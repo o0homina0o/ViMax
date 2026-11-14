@@ -1,0 +1,35 @@
+# Local-GPU config: images/video render on your own GPU via localhost servers,
+# chat/keyframe selection uses OpenRouter (google/gemma-4-31b-it:free -- free tier).
+# Keep real keys out of commits: paste your OpenRouter key below before running.
+chat_model:
+  init_args:
+    model: google/gemma-4-31b-it:free
+    model_provider: openai
+    api_key: "PUT-YOUR-OPENROUTER-API-KEY-HERE"
+    base_url: https://openrouter.ai/api/v1
+  max_requests_per_minute: 15
+  max_requests_per_day: null
+
+image_generator:
+  class_path: tools.ImageGeneratorQwenLocal
+  init_args:
+    url: http://127.0.0.1:8701
+    # token: set only if you started qwen_image_server.py with QWEN_SERVER_TOKEN
+  max_requests_per_minute: 4
+  max_requests_per_day: null
+
+video_generator:
+  class_path: tools.VideoGeneratorLTXLocal
+  init_args:
+    url: http://127.0.0.1:8702
+    model: Lightricks/LTX-2.5-Diffusers
+    # num_frames: 121          # snapped to the 8k+1 form LTX requires
+    # fps: 24
+    # resolution: "1280x704"   # snapped to multiples of 32
+  max_requests_per_minute: 2
+  max_requests_per_day: null
+
+image_selection:
+  num_candidates: 2  # 1 disables VLM selection; the chat model must support vision.
+
+working_dir: .working_dir/script2video

@@ -1,0 +1,14 @@
+# Local GPU inference servers (install into a DEDICATED venv -- see LOCAL_GPU_SETUP.md)
+# Install torch FIRST with the CUDA build matching your GPU, e.g. for Blackwell:
+#   uv pip install torch --index-url https://download.pytorch.org/whl/cu128
+diffusers>=0.36.0
+transformers>=4.57.0
+accelerate>=1.0.0
+sentencepiece
+protobuf
+fastapi
+uvicorn[standard]
+pillow
+imageio
+imageio-ffmpeg
+huggingface_hub
